@@ -1,14 +1,4 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import AuthProvider from '../../context/AuthProvider';
-import { Toaster } from "@/components/ui/sonner"
-
-const inter = Inter({ subsets: ['latin'] });
-
-export const metadata: Metadata = {
-  title: 'True Feedback',
-  description: 'Real feedback from real people.',
-};
+import Navbar from '@/components/Navbar';
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -16,13 +6,9 @@ interface RootLayoutProps {
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <AuthProvider>
-          {children}
-          <Toaster />
-        </AuthProvider>
-      </body>
-    </html>
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      {children}
+    </div>
   );
 }
