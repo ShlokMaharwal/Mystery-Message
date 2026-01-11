@@ -41,9 +41,10 @@ export default function SignInForm() {
       } else {
         toast.error(result.error);
       }
+      return;
     }
 
-    if (result?.url) {
+    if (result?.url || result?.ok) {
       router.replace('/dashboard');
     }
   };

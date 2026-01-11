@@ -16,27 +16,26 @@ export async function GET(request: Request) {
             { status: 401 }
         );
     }
-    const userId = new mongoose.Types.ObjectId(_user._id);
+    const userId = _user._id;
     try {
-        const user = await UserModel.aggregate([
-            { $match: { _id: userId } },
-            { $unwind: '$messages' },
-            { $sort: { 'messages.createdAt': -1 } },
-            { $group: { _id: '$_id', messages: { $push: '$messages' } } },
-        ]).exec();
+        const foundUser = await UserModel.findById(userId).select('messages');
 
-        if (!user || user.length === 0) {
+        if (!foundUser) {
             return Response.json(
                 { message: 'User not found', success: false },
                 { status: 404 }
             );
         }
 
+        const msgs = (foundUser.messages || []).slice().sort((a: any, b: any) => {
+            const da = new Date(a.createdAt).getTime();
+            const db = new Date(b.createdAt).getTime();
+            return db - da;
+        });
+
         return Response.json(
-            { messages: user[0].messages },
-            {
-                status: 200,
-            }
+            { messages: msgs },
+            { status: 200 }
         );
     } catch (error) {
         console.error('An unexpected error occurred:', error);

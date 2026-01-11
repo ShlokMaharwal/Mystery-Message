@@ -34,23 +34,23 @@ export default function SendMessagePage() {
     },
   });
 
-  // Check if user is accepting messages
   useEffect(() => {
     const checkAcceptingMessages = async () => {
+      if (!params?.username) return;
+
       try {
         const response = await axios.get<ApiResponse>(
           `/api/is-accepting-messages/${params.username}`
         );
         setIsAcceptingMessages(response.data.isAcceptingMessages ?? false);
       } catch (error) {
-        console.error('Error checking message status:', error);
         setIsAcceptingMessages(false);
       } finally {
         setIsFetchingStatus(false);
       }
     };
 
-    checkAcceptingMessages();
+    if (params?.username) checkAcceptingMessages();
   }, [params.username]);
 
   const onSubmit = async (data: z.infer<typeof messageSchema>) => {

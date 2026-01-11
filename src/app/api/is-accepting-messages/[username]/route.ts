@@ -5,13 +5,18 @@ export async function GET(
   request: Request,
   { params }: { params: { username: string } }
 ) {
-  const username = params.username;
+  const rawUsername = params.username;
+  const username = decodeURIComponent(rawUsername || '');
   await dbConnect();
 
   try {
-    const user = await UserModel.findOne({ username }).select(
+    console.log('is-accepting-messages: received username:', { rawUsername, username });
+
+    const user = await UserModel.findOne({ username: { $regex: `^${username}$`, $options: 'i' } }).select(
       'isAcceptingMessages'
     );
+
+    console.log('is-accepting-messages: found user?', !!user);
 
     if (!user) {
       return Response.json(
