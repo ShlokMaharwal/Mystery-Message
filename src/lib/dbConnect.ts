@@ -13,15 +13,23 @@ async function dbConnect():Promise<void>{
     }
 
     try{
-        const db= await mongoose.connect(process.env.MONGODB_URI || '',{})
+        const mongoUri = process.env.MONGODB_URI;
+        
+        if (!mongoUri) {
+            throw new Error("MONGODB_URI is not defined in environment variables");
+        }
 
-        connection.isConnected=db.connections[0].
-        readyState
-        console.log("DB connected successfully");
+        const db = await mongoose.connect(mongoUri, {
+            retryWrites: true,
+            w: "majority"
+        })
+
+        connection.isConnected = db.connections[0].readyState
+        console.log("DB connected successfully with URI:", mongoUri.substring(0, 50) + "...");
 
     }catch(error){
-        console.log("DB connection failed",error);
-        process.exit(1);
+        console.error("DB connection failed", error);
+        throw error;
     }
 }
 

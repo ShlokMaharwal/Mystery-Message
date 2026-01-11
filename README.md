@@ -1,11 +1,11 @@
-🕵️‍♂️ True Feedback — Anonymous Messaging Platform
+## 🕵️‍♂️ True Feedback — Anonymous Messaging Platform
 
 True Feedback is a full-stack anonymous messaging web app where users can receive honest, anonymous messages through a unique public link — without revealing the sender’s identity.
 
 Built with Next.js App Router, NextAuth, MongoDB, Zod, and shadcn/ui, this project focuses on security, clean UX, and production-ready architecture.
 
 
-✨ Features
+## ✨ Features
 
 🔐 Authentication & Security
 • Email / Username + Password login (NextAuth Credentials)
@@ -36,7 +36,7 @@ Built with Next.js App Router, NextAuth, MongoDB, Zod, and shadcn/ui, this proje
 • MongoDB atomic updates ($pull)
 
 
-🧱 Tech Stack
+## 🧱 Tech Stack
 
 Frontend
 • Next.js 14+ (App Router)

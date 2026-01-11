@@ -2,19 +2,40 @@ import { sendVerificationEmail } from '@/helpers/sendVerificationEmail';
 import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/model/User';
 import bcrypt from 'bcryptjs';
-import { success } from 'zod';
 
 export async function POST(request:Request){
-    await dbConnect()
-
     try {
-        const {username,email,password}=await request.json()
+        console.log("=== Sign-up API called ===");
+        
+        await dbConnect()
+        console.log("✓ Database connected");
+
+        const body = await request.json()
+        console.log("✓ Request parsed:", { username: body.username, email: body.email });
+
+        const {username,email,password} = body
+        
+        // Validate input
+        if (!username || !email || !password) {
+            console.log("✗ Missing required fields");
+            return Response.json({
+                success: false,
+                message: "Username, email, and password are required"
+            }, {
+                status: 400
+            })
+        }
+
+        console.log("✓ Input validation passed");
+
         const existingUserVerifiedByUsername = await UserModel.findOne({
             username,
             isVerified: true
         })
+        console.log("✓ Checked username uniqueness:", !existingUserVerifiedByUsername);
 
         if (existingUserVerifiedByUsername){
+            console.log("✗ Username already taken");
             return Response.json({
                 success: false,
                 message: "Username is already taken"
@@ -25,9 +46,11 @@ export async function POST(request:Request){
 
         const existingUserByEmail = await UserModel.findOne({ email });
         let verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
+        console.log("✓ Generated verification code");
 
         if (existingUserByEmail) {
             if (existingUserByEmail.isVerified) {
+                console.log("✗ Email already verified");
                 return Response.json(
                 {
                     success: false,
@@ -37,10 +60,12 @@ export async function POST(request:Request){
                 );
             } else {
                 const hashedPassword = await bcrypt.hash(password, 10);
+                existingUserByEmail.username = username;
                 existingUserByEmail.password = hashedPassword;
                 existingUserByEmail.verifyCode = verifyCode;
                 existingUserByEmail.verifyCodeExpiry = new Date(Date.now() + 3600000);
                 await existingUserByEmail.save();
+                console.log("✓ Updated existing unverified user:", email);
             }
         } 
         else {
@@ -59,7 +84,8 @@ export async function POST(request:Request){
                 messages: [],
             });
 
-            await newUser.save();
+            const savedUser = await newUser.save();
+            console.log("✓ New user created in DB:", savedUser._id);
         }
 
         // Send verification email
@@ -68,16 +94,14 @@ export async function POST(request:Request){
             username,
             verifyCode
         );
+        
         if (!emailResponse.success) {
-            return Response.json(
-                {
-                success: false,
-                message: emailResponse.message,
-                },
-                { status: 500 }
-            );
+            console.log("⚠ Email sending failed but user was created. Error:", emailResponse.message);
+        } else {
+            console.log("✓ Verification email sent");
         }
 
+        console.log("✓ Sign-up completed successfully");
         return Response.json(
         {
             success: true,
@@ -87,11 +111,11 @@ export async function POST(request:Request){
         );
 
     } catch (error) {
-        console.log("Error registering user",error)
+        console.error("✗ Error registering user", error)
         return Response.json(
             {
                 success: false,
-                message: "Error registering user"
+                message: error instanceof Error ? error.message : "Error registering user"
             },
             {
                 status: 500

@@ -29,23 +29,30 @@ export default function VerifyAccount() {
 
   const onSubmit = async (data: z.infer<typeof VerifySchema>) => {
     try {
+      console.log('=== Verify submission ===');
+      console.log('Username from URL:', params.username);
+      console.log('Code entered:', data.code);
+
       const response = await axios.post<ApiResponse>(`/api/verify-code`, {
         username: params.username,
         code: data.code,
       });
 
-      toast.success('Success', {
-        description: response.data.message,
-      });
+      console.log('Verification response:', response.data);
+      toast.success(response.data.message);
 
       router.replace('/sign-in');
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
-      toast.error('Verification Failed', {
-        description:
-          axiosError.response?.data.message ??
-          'An error occurred. Please try again.',
+      console.error('Verification error:', {
+        status: axiosError.status,
+        message: axiosError.message,
+        responseData: axiosError.response?.data
       });
+      toast.error(
+        axiosError.response?.data.message ??
+          'An error occurred. Please try again.'
+      );
     }
   };
 

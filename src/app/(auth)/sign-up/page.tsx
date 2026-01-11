@@ -65,11 +65,16 @@ export default function SignUpForm() {
   const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmitting(true);
     try {
+      console.log('Submitting signup with data:', { 
+        username: data.username, 
+        email: data.email, 
+        passwordLength: data.password?.length 
+      });
+
       const response = await axios.post<ApiResponse>('/api/sign-up', data);
 
-      toast.success('Success', {
-        description: response.data.message,
-      });
+      console.log('Signup response:', response.data);
+      toast.success(response.data.message);
 
       router.replace(`/verify/${username}`);
 
@@ -81,9 +86,13 @@ export default function SignUpForm() {
 
       let errorMessage = axiosError.response?.data.message ?? 'There was a problem with your sign-up. Please try again.';
 
-      toast.error('Sign Up Failed', {
-        description: errorMessage,
+      console.log('Signup error details:', {
+        status: axiosError.status,
+        message: axiosError.message,
+        responseData: axiosError.response?.data
       });
+
+      toast.error(errorMessage);
 
       setIsSubmitting(false);
     }
@@ -136,7 +145,7 @@ export default function SignUpForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
-                  <input {...field} name="email" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <input {...field} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" type="email" />
                   <p className='text-gray-400 text-sm'>We will send you a verification code</p>
                   <FormMessage />
                 </FormItem>
@@ -149,7 +158,7 @@ export default function SignUpForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
-                  <input type="password" {...field} name="password" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <input type="password" {...field} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
                   <FormMessage />
                 </FormItem>
               )}
