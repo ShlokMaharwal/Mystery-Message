@@ -4,7 +4,6 @@ True Feedback is a full-stack anonymous messaging web app where users can receiv
 
 Built with Next.js App Router, NextAuth, MongoDB, Zod, and shadcn/ui, this project focuses on security, clean UX, and production-ready architecture.
 
-⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻
 
 ✨ Features
 
@@ -36,7 +35,6 @@ Built with Next.js App Router, NextAuth, MongoDB, Zod, and shadcn/ui, this proje
 • Server-side session verification
 • MongoDB atomic updates ($pull)
 
-⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻
 
 🧱 Tech Stack
 
@@ -59,14 +57,16 @@ Backend
 Utilities
 • Debounced username availability check
 
-⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻⸻
 
-🚀 Getting Started
+## 🚀 Getting Started
 
+Follow the steps below to run the project locally:
+
+```bash
 # Install dependencies
 npm install
 
-# Run development server
+# Start the development server
 npm run dev
 
 Visit:
