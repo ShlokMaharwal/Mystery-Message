@@ -44,8 +44,9 @@ export default function SignUpForm() {
         setIsCheckingUsername(true);
         setUsernameMessage('');
         try {
+          const encodedUsername = encodeURIComponent(username);
           const response = await axios.get<ApiResponse>(
-            `/api/check-username-unique?username=${username}`
+            `/api/check-username-unique?username=${encodedUsername}`
           );
           setUsernameMessage(response.data.message);
         } catch (error) {
