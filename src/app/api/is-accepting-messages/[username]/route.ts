@@ -3,9 +3,9 @@ import dbConnect from '@/lib/dbConnect';
 
 export async function GET(
   request: Request,
-  { params }: { params: { username: string } }
+  { params }: { params: Promise<{ username: string }> }
 ) {
-  const rawUsername = params.username;
+  const { username: rawUsername } = await params;
   const username = decodeURIComponent(rawUsername || '');
   await dbConnect();
 
