@@ -51,7 +51,7 @@ export default function VerifyAccount() {
       });
       toast.error(
         axiosError.response?.data.message ??
-          'An error occurred. Please try again.'
+        'An error occurred. Please try again.'
       );
     }
   };

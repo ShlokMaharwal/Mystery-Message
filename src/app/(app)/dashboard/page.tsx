@@ -43,7 +43,7 @@ function UserDashboard() {
       const axiosError = error as AxiosError<ApiResponse>;
       toast.error(
         axiosError.response?.data.message ??
-          'Failed to fetch message settings'
+        'Failed to fetch message settings'
       );
     } finally {
       setIsSwitchLoading(false);
@@ -92,7 +92,7 @@ function UserDashboard() {
       const axiosError = error as AxiosError<ApiResponse>;
       toast.error(
         axiosError.response?.data.message ??
-          'Failed to update message settings'
+        'Failed to update message settings'
       );
     }
   };

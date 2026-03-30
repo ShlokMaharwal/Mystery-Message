@@ -66,10 +66,10 @@ export default function SignUpForm() {
   const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmitting(true);
     try {
-      console.log('Submitting signup with data:', { 
-        username: data.username, 
-        email: data.email, 
-        passwordLength: data.password?.length 
+      console.log('Submitting signup with data:', {
+        username: data.username,
+        email: data.email,
+        passwordLength: data.password?.length
       });
 
       const response = await axios.post<ApiResponse>('/api/sign-up', data);
@@ -127,11 +127,10 @@ export default function SignUpForm() {
                   {isCheckingUsername && <Loader2 className="animate-spin" />}
                   {!isCheckingUsername && usernameMessage && (
                     <p
-                      className={`text-sm ${
-                        usernameMessage === 'Username is unique'
+                      className={`text-sm ${usernameMessage === 'Username is unique'
                           ? 'text-green-500'
                           : 'text-red-500'
-                      }`}
+                        }`}
                     >
                       {usernameMessage}
                     </p>

@@ -39,7 +39,7 @@ export function MessageCard({ message, onMessageDelete }: MessageCardProps) {
         description:
           axiosError.response?.data.message ?? 'Failed to delete message',
       });
-    } 
+    }
   };
 
   return (
